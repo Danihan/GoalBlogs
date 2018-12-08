@@ -5,6 +5,10 @@ class Repository {
     this._table = table
   }
 
+  timestampNow () {
+    return this._db.fn.now()
+  }
+
   async find (where) {
     return this._db.table(this._table).select('*').where(where)
   }
