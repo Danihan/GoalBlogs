@@ -12,31 +12,33 @@ class PostService {
     return showdownConverter.makeHtml(content)
   }
 
-  async viewPost (slug, id) {
+  async renderPost (post) {
+    post.content = await this.renderContent(post.content)
+    return post
+  }
+
+  async viewPost (id, slug) {
     const post = await this._postRepo.findOne({ id, slug })
 
     if (!post) {
       return null
     }
 
-    const renderedContent = await this.renderContent(post.content)
-    post.content = renderedContent
+    const postRendered = await this.renderPost(post)
 
-    return post
+    return postRendered
   }
 
   async listPosts () {
     const posts = await this._postRepo.getLatestPublishedPosts()
 
-    for (const post of posts) {
-      post.content = await this.renderContent(post.content)
-    }
+    const postsRendered = await Promise.all(posts.map(post => this.renderPost(post)))
 
-    return posts
+    return postsRendered
   }
 
-  async getPostForEditing (slug, id) {
-    const post = await this._postRepo.findOne({ id, slug })
+  async getPostForEditing (user, id, slug) {
+    const post = await this._postRepo.findOne({ id, slug, userId: user.id })
 
     if (!post) {
       return null
@@ -62,10 +64,10 @@ class PostService {
 
     const [ createdPostId ] = await this._postRepo.insert(post)
 
-    return this.getPostForEditing(slug, createdPostId)
+    return { id: createdPostId, slug }
   }
 
-  async updatePost (user, slug, id, title, content, status) {
+  async updatePost (user, id, slug, title, content, status) {
     const post = await this._postRepo.findOne({ id, slug, userId: user.id })
 
     if (!post) {
