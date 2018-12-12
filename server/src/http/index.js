@@ -9,6 +9,19 @@ module.exports = async function http ({ authService, userService, postService, c
   return new Promise((resolve, reject) => {
     const app = express()
 
+    if (process.env.SIMULATED_LAG_IN_MS) {
+      const lagInMs = parseInt(process.env.SIMULATED_LAG_IN_MS)
+
+      if (lagInMs < 1) {
+        console.error(`SIMULATED_LAG_IN_MS must be over 0ms (got ${lagInMs})`)
+        process.exit(1)
+      }
+
+      app.use((req, res, next) => {
+        setTimeout(next, lagInMs)
+      })
+    }
+
     app.use(cors())
     app.use(helmet())
 
