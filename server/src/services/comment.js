@@ -11,7 +11,11 @@ class CommentService {
   }
 
   async getPostComments (postId) {
-    return this._commentRepo.find({ postId })
+    const comments = await this._commentRepo.find({ postId })
+
+    const commentsRendered = await Promise.all(comments.map(comment => this.renderContent(comment.content)))
+
+    return commentsRendered
   }
 }
 
