@@ -10,6 +10,8 @@ const UserService = require('./services/user')
 const CommentService = require('./services/comment')
 const PostService = require('./services/post')
 
+const PostController = require('./controllers/post')
+
 async function main () {
   const db = await initDb()
 
@@ -22,7 +24,10 @@ async function main () {
   const postService = new PostService({ postRepo })
   const commentService = new CommentService({ commentRepo })
 
+  const postController = new PostController({ postService, commentService })
   const http = await initHttp({ authService, userService, postService, commentService })
+
+  const http = await initHttp({ authService, userService, postService, commentService, postController })
 
   return {
     db,

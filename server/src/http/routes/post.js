@@ -1,49 +1,57 @@
 const express = require('express')
 
-module.exports = function postRoutes ({ postService }) {
+module.exports = function postRoutes ({ postController, middlewares: { paramPostHandle: middlewareParamPostHandle } }) {
   const app = new express.Router()
+
+  app.param('postHandle', middlewareParamPostHandle())
 
   app.put('/', async (req, res) => {
     const { title, content, status } = req.body
 
-    const data = await postService.createPost(req.user, title, content, status)
+    const data = await postController.createPost(req.user, title, content, status)
 
     res.json({ success: true, data })
   })
 
   app.get('/', async (req, res) => {
-    const data = await postService.listPosts()
+    const data = await postController.listPosts()
 
     res.json({ success: true, data })
   })
 
   app.get('/:postHandle', async (req, res) => {
-    const split = req.params.postHandle.split('-')
-    const id = split.pop()
-    const slug = split.join('-')
+    const { id, slug } = req.params.postHandle
 
-    const data = await postService.viewPost(slug, id)
+    if (!id || !slug) {
+      return res.json({ success: false })
+    }
+
+    const data = await postController.viewPost(id, slug)
 
     res.json({ success: true, data })
   })
 
   app.get('/:postHandle/edit', async (req, res) => {
-    const split = req.params.postHandle.split('-')
-    const id = split.pop()
-    const slug = split.join('-')
+    const { id, slug } = req.params.postHandle
 
-    const data = await postService.getPostForEditing(slug, id)
+    if (!id || !slug) {
+      return res.json({ success: false })
+    }
+
+    const data = await postController.getPostForEditing(id, slug)
+
     res.json({ success: true, data })
   })
 
   app.put('/:postHandle/edit', async (req, res) => {
-    const split = req.params.postHandle.split('-')
-    const id = split.pop()
-    const slug = split.join('-')
+    const { id, slug } = req.params.postHandle
+
+    if (!id || !slug) {
+      return res.json({ success: false })
+    }
 
     const { title, content, status } = req.body
-
-    const data = await postService.updatePost(req.user, slug, id, title, content, status)
+    const data = await postController.updatePost(req.user, id, slug, title, content, status)
 
     res.json({ success: true, data })
   })
