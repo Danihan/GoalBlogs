@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const routes = require('./routes')
 
-module.exports = async function http ({ authService, userService, postService, commentService, postController }) {
+module.exports = async function http ({ authService, userService, postService, commentService, postController, commentController }) {
   return new Promise((resolve, reject) => {
     const app = express()
 
@@ -29,7 +29,7 @@ module.exports = async function http ({ authService, userService, postService, c
 
     app.use(middlewares.authJwt({ authService }))
 
-    app.use(routes({ authService, userService, postService, commentService, postController, middlewares }))
+    app.use(routes({ authService, userService, postService, commentService, postController, commentController, middlewares }))
 
     const httpPort = process.env.HTTP_PORT || 8080
     app.listen(httpPort, resolve)
