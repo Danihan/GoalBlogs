@@ -20,5 +20,17 @@ module.exports = function authRoutes ({ authService }) {
     res.json({ success: false })
   })
 
+  app.post('/register/email', async (req, res) => {
+    const { email, password } = req.body
+
+    if (email && password) {
+      const result = await authService.registerWithEmailAndPassword({ email, password })
+
+      return res.json({ success: result })
+    }
+
+    res.json({ success: false })
+  })
+
   return app
 }
