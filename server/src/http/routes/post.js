@@ -38,7 +38,7 @@ module.exports = function postRoutes ({ postController, middlewares: { paramPost
       return res.json({ success: false })
     }
 
-    const data = await postController.getPostForEditing(id, slug)
+    const data = await postController.getPostForEditing(req.user, id, slug)
 
     res.json({ success: true, data })
   })
