@@ -26,6 +26,12 @@ class PostController {
     return post
   }
 
+  async listPostsForEditing (user) {
+    const posts = await this._postService.listPostsForEditing(user)
+
+    return posts
+  }
+
   async updatePost (user, id, slug, title, content, status) {
     const success = await this._postService.updatePost(user, id, slug, title, content, status)
 
@@ -33,7 +39,7 @@ class PostController {
       return false
     }
 
-    return this.getPostForEditing(id, slug)
+    return this.getPostForEditing(user, id, slug)
   }
 }
 

@@ -47,6 +47,16 @@ class PostService {
     return post
   }
 
+  async listPostsForEditing (user) {
+    const posts = await this._postRepo.find({ userId: user.id })
+
+    if (!posts) {
+      return null
+    }
+
+    return posts
+  }
+
   async createPost (user, title, content, status) {
     const slug = slugify(title, { lower: true })
 
