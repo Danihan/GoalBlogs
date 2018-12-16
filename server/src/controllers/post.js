@@ -17,7 +17,7 @@ class PostController {
   async createPost (user, title, content, status) {
     const { id, slug } = await this._postService.createPost(user, title, content, status)
 
-    return this.getPostForEditing(id, slug)
+    return this.getPostForEditing(user, id, slug)
   }
 
   async getPostForEditing (user, id, slug) {
