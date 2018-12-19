@@ -20,7 +20,7 @@ async function main () {
   const commentRepo = new CommentRepository({ db })
   const postRepo = new PostRepository({ db })
 
-  const authService = new AuthService({ userRepo, secret: 'REPLACEME' })
+  const authService = new AuthService({ userRepo, secret: process.env.SECRET || 'REPLACEME' })
   const userService = new UserService({ userRepo })
   const postService = new PostService({ postRepo })
   const commentService = new CommentService({ commentRepo })
