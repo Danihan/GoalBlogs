@@ -31,7 +31,7 @@ module.exports = async function http ({ authService, userService, postService, c
 
     app.use(routes({ authService, userService, postService, commentService, postController, commentController, middlewares }))
 
-    const httpPort = process.env.HTTP_PORT || 8080
+    const httpPort = process.env.HTTP_PORT || 8079
     app.listen(httpPort, resolve)
   })
 }
