@@ -18,9 +18,17 @@
     "slugify": "^1.3.3"
   },
   "devDependencies": {
+    "nodemon": "^1.18.9",
     "standard": "^12.0.1"
   },
   "scripts": {
-    "lint": "standard --lint"
+    "start": "nodemon",
+    "dev": "nodemon",
+    "lint": "standard --lint",
+    "fix": "standard --fix",
+    "test": "standard",
+    "db:migrate": "knex migrate:latest",
+    "db:rollback": "knex migrate:rollback",
+    "db:seed": "knex seed:run"
   }
 }
