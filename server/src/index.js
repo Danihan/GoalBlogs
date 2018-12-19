@@ -16,6 +16,8 @@ const CommentController = require('./controllers/comment')
 async function main () {
   const db = await initDb()
 
+  console.info('Connected to the database succesfully.')
+
   const userRepo = new UserRepository({ db })
   const commentRepo = new CommentRepository({ db })
   const postRepo = new PostRepository({ db })
@@ -29,6 +31,8 @@ async function main () {
   const commentController = new CommentController({ commentService })
 
   const http = await initHttp({ authService, userService, postService, commentService, postController, commentController })
+
+  console.info('HTTP server is running.')
 
   return {
     db,
